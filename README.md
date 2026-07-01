@@ -1,16 +1,16 @@
-# ESP32-Smart-Energy-Management-System
+# ESP32-RTOS-Power_Monitor
 
 A real-time, RTOS-driven energy management node designed to monitor domestic power consumption, execute high-speed fault protection, and provide asynchronous telemetry via MQTT. 
 
 This system utilizes an asymmetric multiprocessing architecture on the ESP32, strictly isolating the network stack from critical True-RMS DSP and hardware-level safety interlock routines to guarantee deterministic performance.
 
-## System Architecture
+## ⚙️ System Architecture
 
 * **Core 0 (Network Stack):** Dedicated to handling Wi-Fi connectivity, MQTT payload serialization, and asynchronous state publishing. Engineered with static C-string buffers (`snprintf`, `strcmp`) to prevent heap fragmentation during long-term continuous operation.
 * **Core 1 (Real-Time Control):** Dedicated to high-frequency ADC polling, DSP algorithms for True-RMS calculation, and hard-real-time safety checks.
 * **Safety Interlocks:** Features independent Over-Current (OC) latching for dual load channels and a global Over-Voltage/Under-Voltage (OV/UV) mains trip. These execute completely outside the network loop for immediate load disconnection.
 
-## Hardware Stack
+## 🛠️ Hardware Stack
 
 * **Microcontroller:** ESP32 (Tensilica Xtensa Dual-Core)
 * **Voltage Sensing:** ZMPT101B (Galvanically isolated)
@@ -19,29 +19,32 @@ This system utilizes an asymmetric multiprocessing architecture on the ESP32, st
 * **Actuation:** Dual 5V Relays for load switching
 * **Alerts:** Active Buzzer and discrete LED fault indicators
 
-### Hardware Implementation & Demo
+### 📸 Hardware Implementation & Demo
 The final circuit is securely implemented on a custom hand-soldered zero PCB perf board for optimal signal integrity in noisy environments.
 
+#### System Demonstration
+<video src="media/Video.mp4" controls width="100%" max-width="600px"></video>
+
 #### Hardware Setup Gallery
-![Hardware Setup 1](media/1.jpeg)
+<img src="media/1.jpeg" width="32%" /> <img src="media/2.jpeg" width="32%" /> <img src="media/3.jpeg" width="32%" />
 
-![Hardware Setup 2](media/2.jpeg)
-
-![Hardware Setup 3](media/3.jpeg)
-
-#### Interactive Dashboard & Control Interface
+#### 📊 Interactive Dashboard & Control Interface
 The system integrates an asynchronous MQTT-backed Node-RED interface for operational command and centralized data visualization. 
 
 * **Telemetry UI:** Provides real-time tracking of dual-channel power metrics (W), mains voltage parameters (V), localized load consumption (kWh), and system fault alerts.
 * **Control UI:** Features interactive actuation toggle inputs to manually override individual load relays remotely over the local network via specific MQTT command topics (`home/control/relay1`, `home/control/relay2`).
 
-![Node-RED Dashboard UI](media/5.png)
+<br>
+
+<img src="media/5.png" width="80%" max-width="600px" />  
 *(Centralized user dashboard displaying live electrical parameters and relay actuation states)*
 
-![Node-RED Backend Flow Connections](media/4.png)
+<br>
+
+<img src="media/4.png" width="80%" max-width="600px" />  
 *(Asynchronous event-driven Node-RED flow backend handling incoming payload parsing and topic routing)*
 
-## Firmware Features
+## 💻 Firmware Features
 
 * **FreeRTOS Integration:** Task scheduling and strict core pinning for deterministic execution.
 * **Custom DSP Algorithm:** Lightweight True-RMS processing of AC waveforms (V, I1, I2) with software-based auto-calibration for sensor offset nulling on boot.
@@ -66,7 +69,7 @@ The system integrates an asynchronous MQTT-backed Node-RED interface for operati
 | **SH1106 OLED (SDA)** | `21` | I2C | Hardware I2C |
 | **SH1106 OLED (SCL)** | `22` | I2C | Hardware I2C |
 
-## Setup and Deployment
+## 🚀 Setup and Deployment
 
 1. Configure the MQTT Broker IP and Wi-Fi credentials in `src/main.cpp`.
 2. Open the project folder in VS Code with the **PlatformIO** extension active.
